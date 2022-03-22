@@ -4,18 +4,21 @@
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
-    <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+    <div class="collapse navbar-collapse justify-content-between" id="navbarNavAltMarkup">
       <div class="navbar-nav">
         <a class="nav-item nav-link" href="/urls">My URLs</a>
         <a class="nav-item nav-link" href="/urls/new">Create New URL</a>
       </div>
-    </div>
-    <form class="form-inline" action="/login" method="POST">
+      <form class="form-inline" action="/login" method="POST">
+      <!-- TODO - add conditional to hide login form and show "Logged in as USER" if user is logged in -->
+      
       <div class="form-group">
         <label class="text-light mr-2" for="username">Login: </label>
         <input class="form-control form-control-sm mr-2" type="text" placeholder="Enter your username" name="username">
         <button type="submit" class="btn btn-outline-light btn-sm">Submit</button>
       </div>
     </form>
+    </div>
+    
   </nav>
 </header>
