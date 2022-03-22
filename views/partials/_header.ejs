@@ -9,15 +9,24 @@
         <a class="nav-item nav-link" href="/urls">My URLs</a>
         <a class="nav-item nav-link" href="/urls/new">Create New URL</a>
       </div>
-      <form class="form-inline" action="/login" method="POST">
       <!-- TODO - add conditional to hide login form and show "Logged in as USER" if user is logged in -->
-      
-      <div class="form-group">
-        <label class="text-light mr-2" for="username">Login: </label>
-        <input class="form-control form-control-sm mr-2" type="text" placeholder="Enter your username" name="username">
-        <button type="submit" class="btn btn-outline-light btn-sm">Submit</button>
-      </div>
-    </form>
+      <% if (typeof(username) !== 'undefined') { %>
+        <form class="form-inline" action="/logout" method="POST">
+          <div class="form-group">
+            <label class="text-light mr-2" for="username">Logged in as: </label>
+            <p class="text-light mb-0" name="username"><strong><%= username %></strong></p>
+            <button type="submit" class="btn btn-outline-light ml-4 btn-sm">Logout</button>
+          </div>
+        </form>
+      <% } else { %>  
+        <form class="form-inline" action="/login" method="POST">
+          <div class="form-group">
+              <label class="text-light mr-2" for="username">Login: </label>
+              <input class="form-control form-control-sm" type="text" placeholder="Enter your username" name="username">
+              <button type="submit" class="btn btn-outline-light ml-2 btn-sm">Submit</button>
+          </div>
+        </form>
+      <% } %>
     </div>
     
   </nav>
