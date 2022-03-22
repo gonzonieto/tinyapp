@@ -8,5 +8,5 @@ The focus is to learn about HTTP requests and how to route those requests. The c
 
 ## Tech Stack
 
-* Server: [Express JS](https://expressjs.com/)
+* Server: [Node.js](https://nodejs.org/en/) & [Express JS](https://expressjs.com/)
 * Templating: [EJS](https://ejs.co/)
