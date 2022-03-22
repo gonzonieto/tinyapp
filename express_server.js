@@ -29,7 +29,6 @@ app.get('/urls/:shortURL', (req, res) => {
       return urlDatabase[this.shortURL];
     }
   };
-  console.log(templateVars);
   res.render('urls_show', templateVars);
 });
 
