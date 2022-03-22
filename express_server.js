@@ -24,12 +24,13 @@ app.get('/hello', (req, res) => {
 
 app.get('/urls', (req, res) => {
   const templateVars = { urls: urlDatabase };
+
   res.render("urls_index", templateVars);
 });
 
 app.post('/urls', (req, res) => {
-  console.log(req.body);
-  res.send('Ok');
+  urlDatabase[generateRandomString()] = req.body.longURL;
+  res.redirect('/urls');
 });
 
 app.get('/urls.json', (req, res) => {
@@ -46,7 +47,11 @@ app.get('/urls/:shortURL', (req, res) => {
     shortURL,
     longURL: urlDatabase[shortURL]
   };
-  res.render('urls_show', templateVars);
+  if (urlDatabase[shortURL]) {
+    res.redirect(urlDatabase[shortURL]);
+  } else {
+    res.render('urls_show', templateVars);
+  }
 });
 
 app.listen(PORT, () => {
