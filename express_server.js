@@ -4,11 +4,12 @@ const PORT = 8080;
 
 app.set('view engine', 'ejs');
 
-// using body parsing and cookie parsing middleware from Express
+// body parsing middleware from Express JS
 // http://expressjs.com/en/resources/middleware/body-parser.html
 const bodyParser = require('body-parser');
 app.use(bodyParser.urlencoded({extended: true}));
 
+// cookie parsing middleware from Express JS
 // http://expressjs.com/en/resources/middleware/cookie-parser.html
 const cookieParser = require('cookie-parser');
 app.use(cookieParser());
@@ -22,10 +23,6 @@ const urlDatabase = {
 
 app.get('/', (req, res) => {
   res.redirect('/urls');
-});
-
-app.get('/hello', (req, res) => {
-  res.send('<html><body>Hello <b>World</b></body></html>\n');
 });
 
 app.get('/u/:shortURL', (req, res) => {
