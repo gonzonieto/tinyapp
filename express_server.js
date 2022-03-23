@@ -25,6 +25,10 @@ app.get('/', (req, res) => {
   res.redirect('/urls');
 });
 
+app.get('/register', (req, res) => {
+  res.render('register_new_user');
+});
+
 app.get('/u/:shortURL', (req, res) => {
   const shortURL = req.params.shortURL;
   const longURL = urlDatabase[shortURL];
