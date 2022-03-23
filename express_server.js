@@ -83,9 +83,21 @@ app.get('/urls/:shortURL', (req, res) => {
 
 // POST
 app.post('/register', (req, res) => {
-  const id = generateRandomString();
   const email = req.body.email;
   const password = req.body.password;
+
+  //Check if email or password are empty strings and return an error
+  if ([email, password].includes('')) {
+    res.status(400).send('Email and password fields cannot be blank.');
+  }
+
+  //Check if email is already in use by generating an array of user emails and checking against it
+  const userEmails = Object.values(users).map((user) => user['email']);
+  if (userEmails.includes(email)) {
+    res.status(400).send(`That email is already in use. Please use another email.`);
+  }
+
+  const id = generateRandomString();
   users[id] = {
     id,
     email,
