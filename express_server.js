@@ -21,6 +21,20 @@ const urlDatabase = {
   '9sm5xK': 'http://www.google.com'
 };
 
+const users = {
+  "r7ri45": {
+    id: "r7ri45",
+    email: "test@test.com",
+    password: "purple-monkey-dinosaur"
+  },
+  "user2RandomID": {
+    id: "user2RandomID",
+    email: "user2@example.com",
+    password: "dishwasher-funk"
+  }
+};
+
+// GET
 app.get('/', (req, res) => {
   res.redirect('/urls');
 });
@@ -36,11 +50,11 @@ app.get('/u/:shortURL', (req, res) => {
 });
 
 app.get('/urls', (req, res) => {
+  const userID = req.cookies['user_id'];
   const templateVars = {
     urls: urlDatabase,
-    username: req.cookies['username']
+    user: users[userID]
   };
-  console.log(templateVars);
   res.render('urls_index', templateVars);
 });
 
@@ -49,21 +63,36 @@ app.get('/urls.json', (req, res) => {
 });
 
 app.get('/urls/new', (req, res) => {
+  const userID = req.cookies['user_id'];
   const templateVars = {
-    username: req.cookies['username']
+    user: users[userID]
   };
   res.render('urls_new', templateVars);
 });
 
 app.get('/urls/:shortURL', (req, res) => {
+  const userID = req.cookies['user_id'];
   const shortURL = req.params.shortURL;
   const templateVars = {
     shortURL,
     longURL: urlDatabase[shortURL],
-    username: req.cookies['username']
+    user: users[userID]
   };
-  
   res.render('urls_show', templateVars);
+});
+
+// POST
+app.post('/register', (req, res) => {
+  const id = generateRandomString();
+  const email = req.body.email;
+  const password = req.body.password;
+  users[id] = {
+    id,
+    email,
+    password
+  };
+  res.cookie('user_id', id);
+  res.redirect('/urls');
 });
 
 app.post('/urls/:id', (req, res) => {
@@ -96,5 +125,5 @@ app.post('/logout', (req, res) => {
 });
 
 app.listen(PORT, () => {
-  console.log(`TinyURL app listening on port ${PORT}!`);
+  console.log(`TinyAPP app listening on port ${PORT}!`);
 });
