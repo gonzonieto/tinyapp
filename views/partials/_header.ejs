@@ -8,27 +8,19 @@
       <div class="navbar-nav">
         <a class="nav-item nav-link" href="/urls">My URLs</a>
         <a class="nav-item nav-link" href="/urls/new">Create New URL</a>
+        <form class="form-inline" action="/logout" method="POST">
+          <button type="submit" class="btn btn-outline-light ml-4 btn-sm">COOKIE MONSTER</button>
+        </form>
       </div>
       <!-- if user is logged in, show their username and hide login form -->
       <% if (typeof(user) !== 'undefined') { %>
-        <form class="form-inline" action="/logout" method="POST">
-          <div class="form-group">
-            <label class="text-light mr-2" for="username">Logged in as: </label>
-            <p class="text-light mb-0" name="username"><strong><%= user.email %></strong></p>
-            <button type="submit" class="btn btn-outline-light ml-4 btn-sm">Logout</button>
-          </div>
-        </form>
+        
         <!-- otherwise, show the login form -->
-      <% } else { %>  
-        <form class="form-inline" action="/login" method="POST">
-          <div class="input-group">
-            <input class="form-control form-control-sm" aria-describedby="button-addon2" type="text" placeholder="Username" name="username">
-            <!-- TODO: make login button part of the text field following -->
-            <div class="input-group-append">
-              <button type="submit" class="btn btn-outline-light btn-sm" id="submit-button">Login</button>
-            </div>
-          </div>
-        </form>
+      <% } else { %>
+      <div>
+        <a class="btn btn-outline-light btn-sm mr-2" href="/login" role="button">Log in</a>
+        <a class="btn btn-outline-light btn-sm" href="/register" role="button">Sign up</a>
+      </div> 
       <% } %>
     </div>
   </nav>
