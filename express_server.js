@@ -91,6 +91,7 @@ app.post('/register', (req, res) => {
   const password = req.body.password;
 
   //Check if email or password are empty strings and return an error
+  //TODO: Refactor function that checks if email/pw are blank -- newUserHasBlankFields()
   if ([email, password].includes('')) {
     res.status(400).send('Email and password fields cannot be blank.');
   }
