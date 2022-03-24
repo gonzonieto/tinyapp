@@ -2,11 +2,11 @@
 
 - Site Header
   - If a user is logged in, the header shows:
-    - [ ] the user's email
+    - [x] the user's email
     - [ ] a logout button which makes a POST request to `/logout`
   - If a user is not logged in, the header shows:
-    - [ ] a link to the login page (`/login`)
-    - [ ] a link to the registration page (`/register`)
+    - [x] a link to the login page (`/login`)
+    - [x] a link to the registration page (`/register`)
 
 ### Behaviour Requirements
 
@@ -109,13 +109,13 @@
   - if email already exists:
     - [ ] returns HTML with a relevant error message
   - otherwise:
-    - [ ] creates a new user
+    - [x] creates a new user
     - [ ] encrypts the new user's password with `crypt`
-    - [ ] sets a cookie
-    - [ ] redirects to `/urls`
+    - [x] sets a cookie
+    - [x] redirects to `/urls`
 - `POST /logout`
-  - [ ] deletes cookie
-  - [ ] redirects to `/urls`
+  - [x] deletes cookie
+  - [x] redirects to `/urls`
 
 
 
