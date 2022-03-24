@@ -39,6 +39,10 @@ app.get('/', (req, res) => {
   res.redirect('/urls');
 });
 
+app.get('/login', (req, res) => {
+  res.render('login');
+});
+
 app.get('/register', (req, res) => {
   res.render('register_new_user');
 });
@@ -91,7 +95,7 @@ app.post('/register', (req, res) => {
     res.status(400).send('Email and password fields cannot be blank.');
   }
 
-  //Check if email is already in use by generating an array of user emails and checking against it
+  //Generate an array of user emails and checking against it to see if email is already in use
   const userEmails = Object.values(users).map((user) => user['email']);
   if (userEmails.includes(email)) {
     res.status(400).send(`That email is already in use. Please use another email.`);
