@@ -58,7 +58,7 @@
     - [ ] returns HTML with a relevant error message
 - `GET /u/:id`
   - if URL for the given ID exists:
-    - [ ] redirects to the corresponding long URL
+    - [x] redirects to the corresponding long URL
   - if URL for the given ID does not exist:
     - [ ] (Minor) returns HTML with a relevant error message
 - `POST /urls`
