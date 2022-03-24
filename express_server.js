@@ -18,7 +18,13 @@ const generateRandomString = () => Math.random().toString(36).slice(2, 8);
 
 const getUserIDFromEmail = (email) => {
   const user = Object.values(users).find((item) => item.email === email);
-  return user.id;
+  return user === undefined ? undefined : user.id;
+};
+
+const addNewUser = (email, password) => {
+  const id = generateRandomString();
+  users[id] = { id, email, password };
+  return id;
 };
 
 const urlDatabase = {
@@ -95,21 +101,21 @@ app.post('/register', (req, res) => {
   const password = req.body.password;
 
   //Check if email or password are empty strings and return an error
-  //TODO: Refactor function that checks if email/pw are blank -- newUserHasBlankFields()
+  //TODO: Refactor function that checks if email/pw are blank -- newUserHasBlankFields(email, password)
   if ([email, password].includes('')) {
     res.status(400).send('Email and password fields cannot be blank.');
+    return;
   }
 
+  //TODO: Refactor function that checks if email is in use -- newEmailAlreadyUsed(email)
   //Generate an array of user emails and checking against it to see if email is already in use
-  //TODO: Refactor function that checks if email is in use -- newEmailAlreadyUsed()
   const userEmails = Object.values(users).map((user) => user['email']);
   if (userEmails.includes(email)) {
-    res.status(400).send(`That email is already in use. Please use another email.`);
+    res.status(400).send(`ERROR 400 BAD REQUEST: That email is already in use. Please use another email.`);
+    return;
   }
 
-  //TODO: Refactor function that creates new user -- createNewUser() which will return the newly generated random string
-  const id = generateRandomString();
-  users[id] = { id, email, password };
+  const id = addNewUser(email, password);
   res.cookie('user_id', id);
   res.redirect('/urls');
 });
@@ -135,6 +141,11 @@ app.post('/urls/:shortURL/delete', (req, res) => {
 app.post('/login', (req, res) => {
   const { email, password } = req.body;
   const id = getUserIDFromEmail(email);
+  if (id === undefined) {
+    res.status(403).send(`ERROR 403 FORBIDDEN: There is no account associated with that email address.`);
+    return;
+  }
+
   res.cookie('user_id', id);
   res.redirect('/urls');
 });
