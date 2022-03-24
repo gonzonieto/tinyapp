@@ -69,16 +69,16 @@
     - [ ] (Minor) returns HTML with a relevant error message
 - `POST /urls/:id`
   - if user is logged in and owns the URL for the given ID:
-    - [ ] updates the URL
-    - [ ] redirects to `/urls`
+    - [x] updates the URL
+    - [x] redirects to `/urls`
   - if user is not logged in:
     - [ ] (Minor) returns HTML with a relevant error message
   - if user is logged in but does not own the URL for the given ID:
     - [ ] (Minor) returns HTML with a relevant error message
 - `POST /urls/:id/delete`
   - if user is logged in and owns the URL for the given ID:
-    - [ ] deletes the URL
-    - [ ] redirects to `/urls`
+    - [x] deletes the URL
+    - [x] redirects to `/urls`
   - if user is not logged in:
     - [ ] (Minor) returns HTML with a relevant error message
   - if user is logged in but does not own the URL for the given ID:
@@ -88,8 +88,8 @@
     - [ ] (Minor) redirects to `/urls`
   - if user is not logged in:
     - returns HTML with a form which contains:
-      - [ ] input fields for email and password
-      - [ ] submit button that makes a POST request to `/login`
+      - [x] input fields for email and password
+      - [x] submit button that makes a POST request to `/login`
 - `GET /register`
   - if user is logged in:
     - [x] (Minor) redirects to `/urls`
@@ -99,8 +99,8 @@
       - [x] a register button that makes a POST request to `/register`
 - `POST /login`
   - if email and password params match an existing user:
-    - [ ] sets a cookie
-    - [ ] redirects to `/urls`
+    - [x] sets a cookie
+    - [x] redirects to `/urls`
   - if email and password params don't match an existing user:
     - [ ] returns HTML with a relevant error message
 - `POST /register`
