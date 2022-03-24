@@ -87,7 +87,7 @@ app.get('/register', (req, res) => {
 
 app.get('/u/:shortURL', (req, res) => {
   const shortURL = req.params.shortURL;
-  const longURL = urlDatabase[shortURL];
+  const longURL = urlDatabase[shortURL].longURL;
   res.redirect(longURL);
 });
 
@@ -121,7 +121,7 @@ app.get('/urls/:shortURL', (req, res) => {
   const shortURL = req.params.shortURL;
   const templateVars = {
     shortURL,
-    longURL: urlDatabase[shortURL],
+    longURL: urlDatabase[shortURL].longURL,
     user: users[userID]
   };
   res.render('urls_show', templateVars);
@@ -144,7 +144,7 @@ app.post('/register', (req, res) => {
 
 app.post('/urls/:shortURL', (req, res) => {
   const { shortURL } = req.params;
-  urlDatabase[shortURL] = req.body.longURL;
+  urlDatabase[shortURL].longURL = req.body.longURL;
   res.redirect('/urls/' + shortURL);
 });
 
@@ -154,7 +154,7 @@ app.post('/urls', (req, res) => {
     return;
   }
   const shortURL = generateRandomString();
-  urlDatabase[shortURL] = req.body.longURL;
+  urlDatabase[shortURL].longURL = req.body.longURL;
   res.redirect('/urls/' + shortURL);
 });
 
