@@ -27,6 +27,18 @@ const addNewUser = (email, password) => {
   return id;
 };
 
+const newEmailAlreadyUsed = (email) => {
+  const userEmails = Object.values(users).map((user) => user['email']);
+  return userEmails.includes(email);
+};
+
+const newUserHasBlankFields = (email, password) => [email, password].includes('');
+
+const passwordIsCorrect = (id, password) => {
+  const user = users[id];
+  return user.password === password;
+};
+
 const urlDatabase = {
   'b2xVn2': 'http://www.lighthouselabs.ca',
   '9sm5xK': 'http://www.google.com'
@@ -100,18 +112,8 @@ app.post('/register', (req, res) => {
   const email = req.body.email;
   const password = req.body.password;
 
-  //Check if email or password are empty strings and return an error
-  //TODO: Refactor function that checks if email/pw are blank -- newUserHasBlankFields(email, password)
-  if ([email, password].includes('')) {
-    res.status(400).send('Email and password fields cannot be blank.');
-    return;
-  }
-
-  //TODO: Refactor function that checks if email is in use -- newEmailAlreadyUsed(email)
-  //Generate an array of user emails and checking against it to see if email is already in use
-  const userEmails = Object.values(users).map((user) => user['email']);
-  if (userEmails.includes(email)) {
-    res.status(400).send(`ERROR 400 BAD REQUEST: That email is already in use. Please use another email.`);
+  if (newUserHasBlankFields(email, password) || newEmailAlreadyUsed(email)) {
+    res.status(400).send('400 BAD REQUEST');
     return;
   }
 
@@ -141,11 +143,10 @@ app.post('/urls/:shortURL/delete', (req, res) => {
 app.post('/login', (req, res) => {
   const { email, password } = req.body;
   const id = getUserIDFromEmail(email);
-  if (id === undefined) {
-    res.status(403).send(`ERROR 403 FORBIDDEN: There is no account associated with that email address.`);
+  if (id === undefined || !passwordIsCorrect(id, password)) {
+    res.status(403).send(`403 FORBIDDEN`);
     return;
   }
-
   res.cookie('user_id', id);
   res.redirect('/urls');
 });
