@@ -49,9 +49,16 @@ const passwordIsCorrect = (id, password) => {
 };
 
 const urlDatabase = {
-  'b2xVn2': 'http://www.lighthouselabs.ca',
-  '9sm5xK': 'http://www.google.com'
+  b6UTxQ: {
+    longURL: "https://www.implicitaudio.ca",
+    userID: "aJ48lW"
+  },
+  i3BoGr: {
+    longURL: "https://www.shopify.com",
+    userID: "aJ48lW"
+  }
 };
+
 const users = {
   "r7ri45": {
     id: "r7ri45",
@@ -102,7 +109,7 @@ app.get('/urls/new', (req, res) => {
   const templateVars = {
     user: users[userID]
   };
-  if (!isLoggedIn(userID)) {
+  if (!isLoggedIn(req.cookies['user_id'])) {
     res.redirect('/login');
     return;
   }
@@ -142,6 +149,10 @@ app.post('/urls/:shortURL', (req, res) => {
 });
 
 app.post('/urls', (req, res) => {
+  if (!isLoggedIn(req.cookies['user_id'])) {
+    res.status(401).send('401 UNAUTHORIZED');
+    return;
+  }
   const shortURL = generateRandomString();
   urlDatabase[shortURL] = req.body.longURL;
   res.redirect('/urls/' + shortURL);
