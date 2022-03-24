@@ -66,6 +66,11 @@ const urlsByUser = (userID) => {
   return urls;
 };
 
+const userOwnsUrl = (userID, shortURL) => {
+  const urls = urlsByUser(userID).map(x => x[0]);
+  return urls.includes(shortURL);
+};
+
 const urlDatabase = {
   b6UTxQ: {
     longURL: 'https://www.implicitaudio.ca',
@@ -188,6 +193,16 @@ app.post('/register', (req, res) => {
 
 app.post('/urls/:shortURL', (req, res) => {
   const { shortURL } = req.params;
+  const userID = req.cookies['user_id'];
+  if (!isLoggedIn(userID)) {
+    res.status(401).send('401 UNAUTHORIZED: MUST BE LOGGED IN');
+    return;
+  }
+
+  if (!userOwnsUrl(userID, shortURL)) {
+    res.status(401).send('401 UNAUTHORIZED: MUST BE OWNER OF URL');
+    return;
+  }
   urlDatabase[shortURL].longURL = req.body.longURL;
   res.redirect('/urls/' + shortURL);
 });
@@ -195,9 +210,10 @@ app.post('/urls/:shortURL', (req, res) => {
 app.post('/urls', (req, res) => {
   const userID = req.cookies['user_id'];
   if (!isLoggedIn(userID)) {
-    res.status(401).send('401 UNAUTHORIZED');
+    res.status(401).send('401 UNAUTHORIZED: MUST BE LOGGED IN');
     return;
   }
+
   const shortURL = addNewURL(req.body.longURL, userID);
   console.log(urlDatabase);
   res.redirect('/urls/' + shortURL);
@@ -205,6 +221,16 @@ app.post('/urls', (req, res) => {
 
 app.post('/urls/:shortURL/delete', (req, res) => {
   const { shortURL } = req.params;
+  const userID = req.cookies['user_id'];
+  if (!isLoggedIn(userID)) {
+    res.status(401).send('401 UNAUTHORIZED: MUST BE LOGGED IN');
+    return;
+  }
+
+  if (!userOwnsUrl(userID, shortURL)) {
+    res.status(401).send('401 UNAUTHORIZED: MUST BE OWNER OF URL');
+    return;
+  }
   delete urlDatabase[shortURL];
   res.redirect('/urls');
 });
