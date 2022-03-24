@@ -14,7 +14,7 @@
       </div>
       <!-- if user is logged in, show their username and hide login form -->
       <% if (typeof(user) !== 'undefined') { %>
-        
+        <p class="text-light mb-0 mr-2">Logged in as <%= user.email %></p>
         <!-- otherwise, show the login form -->
       <% } else { %>
       <div>
