@@ -34,6 +34,15 @@ const newEmailAlreadyUsed = (email) => {
 
 const newUserHasBlankFields = (email, password) => [email, password].includes('');
 
+const isLoggedIn = (userID) => {
+  //get an array of valid user IDs
+  const userIDs = Object.keys(users);
+  if (userID === undefined || !userIDs.includes(userID)) {
+    return false;
+  }
+  return true;
+};
+
 const passwordIsCorrect = (id, password) => {
   const user = users[id];
   return user.password === password;
@@ -93,6 +102,10 @@ app.get('/urls/new', (req, res) => {
   const templateVars = {
     user: users[userID]
   };
+  if (!isLoggedIn(userID)) {
+    res.redirect('/login');
+    return;
+  }
   res.render('urls_new', templateVars);
 });
 
