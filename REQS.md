@@ -92,11 +92,11 @@
       - [ ] submit button that makes a POST request to `/login`
 - `GET /register`
   - if user is logged in:
-    - [ ] (Minor) redirects to `/urls`
+    - [x] (Minor) redirects to `/urls`
   - if user is not logged in:
     - returns HTML with a form which contains:
-      - [ ] input fields for email and password
-      - [ ] a register button that makes a POST request to `/register`
+      - [x] input fields for email and password
+      - [x] a register button that makes a POST request to `/register`
 - `POST /login`
   - if email and password params match an existing user:
     - [ ] sets a cookie
