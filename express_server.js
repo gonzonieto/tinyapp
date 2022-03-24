@@ -97,6 +97,7 @@ app.post('/register', (req, res) => {
   }
 
   //Generate an array of user emails and checking against it to see if email is already in use
+  //TODO: Refactor function that checks if email is in use -- newEmailAlreadyUsed()
   const userEmails = Object.values(users).map((user) => user['email']);
   if (userEmails.includes(email)) {
     res.status(400).send(`That email is already in use. Please use another email.`);
@@ -112,8 +113,8 @@ app.post('/register', (req, res) => {
   res.redirect('/urls');
 });
 
-app.post('/urls/:id', (req, res) => {
-  const shortURL = req.params.id;
+app.post('/urls/:shortURL', (req, res) => {
+  const { shortURL } = req.params;
   urlDatabase[shortURL] = req.body.longURL;
   res.redirect('/urls/' + shortURL);
 });
@@ -125,14 +126,14 @@ app.post('/urls', (req, res) => {
 });
 
 app.post('/urls/:shortURL/delete', (req, res) => {
-  const shortURL = req.params.shortURL;
+  const { shortURL } = req.params;
   delete urlDatabase[shortURL];
   res.redirect('/urls');
 });
 
 app.post('/login', (req, res) => {
-  const username  = req.body.username;
-  res.cookie('username', username);
+  const { email, password } = req.body;
+  res.cookie('user_id', email);
   res.redirect('/urls');
 });
 
