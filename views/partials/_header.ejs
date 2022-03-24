@@ -1,4 +1,4 @@
-<header>
+<header class="mb-5" style="box-shadow: 0 1rem 0.9rem grey">
   <nav class="navbar navbar-expand-md navbar-dark bg-success">
     <a class="navbar-brand" href="/urls">TinyApp</a>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
@@ -8,24 +8,19 @@
       <div class="navbar-nav">
         <a class="nav-item nav-link" href="/urls">My URLs</a>
         <a class="nav-item nav-link" href="/urls/new">Create New URL</a>
-      </div>
-      <!-- if user is logged in, show their username and hide login form -->
-      <% if (!username) { %>
-        <form class="form-inline" action="/login" method="POST">
-          <div class="form-group">
-            <input class="form-control form-control-sm" type="text" placeholder="Username" name="username">
-            <button type="submit" class="btn btn-outline-light ml-2 btn-sm">Login</button>
-          </div>
-        </form>
-        <!-- otherwise, show the login form -->
-      <% } else { %>  
         <form class="form-inline" action="/logout" method="POST">
-          <div class="form-group">
-            <label class="text-light mr-2" for="username">Logged in as: </label>
-            <p class="text-light mb-0" name="username"><strong><%= username %></strong></p>
-            <button type="submit" class="btn btn-outline-light ml-4 btn-sm">Logout</button>
-          </div>
+          <button type="submit" class="btn btn-outline-light ml-4 btn-sm">COOKIE MONSTER</button>
         </form>
+      </div>
+      <!-- if user is logged in, show their email and hide login form -->
+      <% if (typeof(user) !== 'undefined') { %>
+        <p class="text-light mb-0 mr-2">Logged in as <%= user.email %></p>
+        <!-- otherwise, show the login form -->
+      <% } else { %>
+      <div>
+        <a class="btn btn-outline-light btn-sm mr-2" href="/login" role="button">Log in</a>
+        <a class="btn btn-outline-light btn-sm" href="/register" role="button">Sign up</a>
+      </div> 
       <% } %>
     </div>
   </nav>
