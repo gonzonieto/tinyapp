@@ -16,11 +16,15 @@ app.use(cookieParser());
 
 const generateRandomString = () => Math.random().toString(36).slice(2, 8);
 
+const getUserIDFromEmail = (email) => {
+  const user = Object.values(users).find((item) => item.email === email);
+  return user.id;
+};
+
 const urlDatabase = {
   'b2xVn2': 'http://www.lighthouselabs.ca',
   '9sm5xK': 'http://www.google.com'
 };
-
 const users = {
   "r7ri45": {
     id: "r7ri45",
@@ -103,12 +107,9 @@ app.post('/register', (req, res) => {
     res.status(400).send(`That email is already in use. Please use another email.`);
   }
 
+  //TODO: Refactor function that creates new user -- createNewUser() which will return the newly generated random string
   const id = generateRandomString();
-  users[id] = {
-    id,
-    email,
-    password
-  };
+  users[id] = { id, email, password };
   res.cookie('user_id', id);
   res.redirect('/urls');
 });
@@ -133,7 +134,8 @@ app.post('/urls/:shortURL/delete', (req, res) => {
 
 app.post('/login', (req, res) => {
   const { email, password } = req.body;
-  res.cookie('user_id', email);
+  const id = getUserIDFromEmail(email);
+  res.cookie('user_id', id);
   res.redirect('/urls');
 });
 
