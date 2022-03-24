@@ -25,12 +25,14 @@
       </thead>
       <tbody>
         <% const regex = new RegExp('(https?):\/\/(w{3}?\.?)') %>
-        <% for(let url in urls) { %>
-          <% const longURL = urls[url].longURL %>
+        <% for(const url of urls) { %>
+          <!-- 'url' is an array with two elements -- url[0] is the shortURL and url[1] has keys 'longURL' and 'userID'-->
+          <% const shortURL = url[0] %> 
+          <% const longURL = url[1]['longURL'] %>
           <% const res = regex.exec(longURL) %>
           <%  %>  
           <tr style="text-align:center">
-            <td class="align-middle"><%= url %></td>
+            <td class="align-middle"><%= shortURL %></td>
             <td class="align-middle"><a href="<%= longURL %>"><%= longURL.substring(res[0].length) %></a></td>
             <td class="align-middle"><a href="/urls/<%= url %>">Edit</a></td>
             <td class="align-middle">

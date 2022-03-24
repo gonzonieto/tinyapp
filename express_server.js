@@ -60,36 +60,42 @@ const passwordIsCorrect = (id, password) => {
   return user.password === password;
 };
 
-const urlsForUser = (userID) => {
-  //return array of URLs that match the userID
-
+const urlsByUser = (userID) => {
+  const urls = Object.entries(urlDatabase)
+    .filter(x => x[1].userID === userID);
+  return urls;
 };
 
 const urlDatabase = {
   b6UTxQ: {
-    longURL: "https://www.implicitaudio.ca",
-    userID: "aJ48lW"
+    longURL: 'https://www.implicitaudio.ca',
+    userID: 'yu0p44'
   },
   i3BoGr: {
-    longURL: "https://www.shopify.com",
-    userID: "aJ48lW"
+    longURL: 'https://www.shopify.com',
+    userID: 'aJ48lW'
   },
   y4tjj1: {
-    longURL: "https://www.implicitaudio.ca",
-    userID: "eez212"
+    longURL: 'https://www.guitarcabinets.ca',
+    userID: 'yu0p44'
   }
 };
 
 const users = {
-  "r7ri45": {
-    id: "r7ri45",
-    email: "test@test.com",
-    password: "purple-monkey-dinosaur"
+  'aJ48lW': {
+    id: 'aJ48lW',
+    email: 'test@test.com',
+    password: 'purple-monkey-dinosaur'
   },
-  "user2RandomID": {
-    id: "user2RandomID",
-    email: "user2@example.com",
-    password: "dishwasher-funk"
+  'yu0p44': {
+    id: 'yu0p44',
+    email: 'g@nzo.com',
+    password: 'gg'
+  },
+  'eez212': {
+    id: 'eez212',
+    email: 'hi@implicitaudio.ca',
+    password: 'nice'
   }
 };
 
@@ -122,14 +128,13 @@ app.get('/u/:shortURL', (req, res) => {
 
 app.get('/urls', (req, res) => {
   const userID = req.cookies['user_id'];
-
   if (!isLoggedIn(userID)) {
     res.status(403).send('404 FORBIDDEN');
     return;
   }
 
   const templateVars = {
-    urls: urlDatabase,
+    urls: urlsByUser(userID),
     user: users[userID]
   };
   res.render('urls_index', templateVars);
