@@ -1,4 +1,6 @@
-# Display Requirements
+# TinyApp Project Requirements
+
+### Display Requirements
 
 - Site Header
   - If a user is logged in, the header shows:
