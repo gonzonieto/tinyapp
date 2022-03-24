@@ -60,6 +60,11 @@ const passwordIsCorrect = (id, password) => {
   return user.password === password;
 };
 
+const urlsForUser = (userID) => {
+  //return array of URLs that match the userID
+
+};
+
 const urlDatabase = {
   b6UTxQ: {
     longURL: "https://www.implicitaudio.ca",
@@ -68,6 +73,10 @@ const urlDatabase = {
   i3BoGr: {
     longURL: "https://www.shopify.com",
     userID: "aJ48lW"
+  },
+  y4tjj1: {
+    longURL: "https://www.implicitaudio.ca",
+    userID: "eez212"
   }
 };
 
@@ -113,7 +122,7 @@ app.get('/u/:shortURL', (req, res) => {
 
 app.get('/urls', (req, res) => {
   const userID = req.cookies['user_id'];
-  
+
   if (!isLoggedIn(userID)) {
     res.status(403).send('404 FORBIDDEN');
     return;
