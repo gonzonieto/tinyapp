@@ -27,6 +27,18 @@ const addNewUser = (email, password) => {
   return id;
 };
 
+const addNewURL = (longURL, userID) => {
+  const shortURL = generateRandomString();
+  urlDatabase[shortURL] = { longURL, userID };
+  return shortURL;
+};
+
+const shortUrlExists = (shortURL) => {
+  return urlDatabase[shortURL] === undefined
+    ? false
+    : true;
+};
+
 const newEmailAlreadyUsed = (email) => {
   const userEmails = Object.values(users).map((user) => user['email']);
   return userEmails.includes(email);
@@ -82,11 +94,19 @@ app.get('/login', (req, res) => {
 });
 
 app.get('/register', (req, res) => {
+  if (isLoggedIn(req.cookies['user_id'])) {
+    res.redirect('/urls');
+    return;
+  }
   res.render('register_new_user');
 });
 
 app.get('/u/:shortURL', (req, res) => {
   const shortURL = req.params.shortURL;
+  if (!(shortUrlExists(shortURL))) {
+    res.status(404).send('404 NOT FOUND');
+    return;
+  }
   const longURL = urlDatabase[shortURL].longURL;
   res.redirect(longURL);
 });
@@ -119,6 +139,10 @@ app.get('/urls/new', (req, res) => {
 app.get('/urls/:shortURL', (req, res) => {
   const userID = req.cookies['user_id'];
   const shortURL = req.params.shortURL;
+  if (!(shortUrlExists(shortURL))) {
+    res.status(404).send('404 NOT FOUND');
+    return;
+  }
   const templateVars = {
     shortURL,
     longURL: urlDatabase[shortURL].longURL,
@@ -149,12 +173,13 @@ app.post('/urls/:shortURL', (req, res) => {
 });
 
 app.post('/urls', (req, res) => {
-  if (!isLoggedIn(req.cookies['user_id'])) {
+  const userID = req.cookies['user_id'];
+  if (!isLoggedIn(userID)) {
     res.status(401).send('401 UNAUTHORIZED');
     return;
   }
-  const shortURL = generateRandomString();
-  urlDatabase[shortURL].longURL = req.body.longURL;
+  const shortURL = addNewURL(req.body.longURL, userID);
+  console.log(urlDatabase);
   res.redirect('/urls/' + shortURL);
 });
 
