@@ -113,6 +113,12 @@ app.get('/u/:shortURL', (req, res) => {
 
 app.get('/urls', (req, res) => {
   const userID = req.cookies['user_id'];
+  
+  if (!isLoggedIn(userID)) {
+    res.status(403).send('404 FORBIDDEN');
+    return;
+  }
+
   const templateVars = {
     urls: urlDatabase,
     user: users[userID]
