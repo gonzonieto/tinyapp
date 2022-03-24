@@ -204,7 +204,7 @@ app.post('/urls/:shortURL', (req, res) => {
     return;
   }
   urlDatabase[shortURL].longURL = req.body.longURL;
-  res.redirect('/urls/' + shortURL);
+  res.redirect('/urls/');
 });
 
 app.post('/urls', (req, res) => {
