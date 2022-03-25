@@ -31,7 +31,7 @@
           <% const res = regex.exec(longURL) %>
           <tr>
             <td class="align-middle">
-              <span class="mr-3" style="color:darkgray">localhost:8080/u/</span><strong><%= shortURL %></strong>
+              <span class="ml-3 mr-3" style="color:darkgray">localhost:8080/u/</span><strong><%= shortURL %></strong>
             </td>
             <td class="align-middle text-center">
               <a href="<%= longURL %>">
@@ -42,8 +42,8 @@
               <% } %>
               </a>
             </td>
-            <td class="align-middle"><a href="/urls/<%= shortURL %>">Edit</a></td>
-            <td class="align-middle">
+            <td class="align-middle text-center"><a href="/urls/<%= shortURL %>">Edit</a></td>
+            <td class="align-middle text-center">
               <form method="POST" action="/urls/<%= url %>/delete">
                 <button type="submit" class="btn btn-danger btn-sm">Delete</button>
               </form>
