@@ -8,10 +8,22 @@ The focus is to learn about HTTP requests and how to route those requests. The c
 
 See project requirements [here](/REQS.md).
 
-## Tech Stack
+## Tech Stack & Dependencies
 
 * Server: [Node.js](https://nodejs.org/en/), [Express JS](https://expressjs.com/)
 * Templating: [EJS](https://ejs.co/)
+
+#### General Dependencies
+
+* [ejs](https://www.npmjs.com/package/ejs) — Embedded Javascript templates
+* [express](https://www.npmjs.com/package/express) — minimalist web framework
+* [cookie-parser](https://www.npmjs.com/package/cookie-parser) — cookie parsing middleware
+* [body-parser](https://www.npmjs.com/package/body-parser) — body parsing middleware
+* [bcryptjs](https://www.npmjs.com/package/bcryptjs) — Library for hashing passwords, optimized for Javascript
+
+#### Dev Dependencies
+
+* [nodemon](https://www.npmjs.com/package/nodemon) — monitor script to automatically restart node app when file changes are detected
 
 ### Future Directions / Personal Stretch Goals
 
