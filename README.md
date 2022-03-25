@@ -2,9 +2,7 @@
 
 TinyApp is a URL shortener.
 
-This is a learning project for week 3 of Lighthouse Labs full-stack web development bootcamp.
-
-The focus is to learn about:
+This is a learning project for week 3 of Lighthouse Labs full-stack web development bootcamp. The objective is to learn about:
 
 * HTTP requests and routing
 * Building a web server
