@@ -1,17 +1,13 @@
 const express = require('express');
+const bodyParser = require('body-parser');
+const cookieParser = require('cookie-parser');
+const bcrypt = require('bcryptjs');
+
 const app = express();
 const PORT = 8080;
 
 app.set('view engine', 'ejs');
-
-// body parsing middleware from Express JS
-// http://expressjs.com/en/resources/middleware/body-parser.html
-const bodyParser = require('body-parser');
 app.use(bodyParser.urlencoded({extended: true}));
-
-// cookie parsing middleware from Express JS
-// http://expressjs.com/en/resources/middleware/cookie-parser.html
-const cookieParser = require('cookie-parser');
 app.use(cookieParser());
 
 const generateRandomString = () => Math.random().toString(36).slice(2, 8);
@@ -186,7 +182,12 @@ app.post('/register', (req, res) => {
     return;
   }
 
-  const id = addNewUser(email, password);
+  const hashedPassword = bcrypt.hashSync(password, 10);
+  console.log('Before:');
+  console.log(users);
+  const id = addNewUser(email, hashedPassword);
+  console.log('After:');
+  console.log(users);
   res.cookie('user_id', id);
   res.redirect('/urls');
 });
