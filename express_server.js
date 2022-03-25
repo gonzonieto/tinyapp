@@ -91,12 +91,12 @@ const users = {
   'yu0p44': {
     id: 'yu0p44',
     email: 'g@nzo.com',
-    password: 'gg'
+    password: '$2a$10$QmOTsuK8oZkAL8cidgjEgOtu0KOv1OMkOeITTugrCTflBb7hAA.bG' // pw = 'gg'
   },
   'eez212': {
     id: 'eez212',
     email: 'hi@implicitaudio.ca',
-    password: 'nice'
+    password: '$2a$10$yJSAt5TGErmWIA/pU6N/N.3xLJxeR7DvqWvLR7jvqFpZrPd7Jto8O' // pw = 'a'
   }
 };
 
