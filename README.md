@@ -26,6 +26,8 @@ See project requirements [here](/REQS.md).
 
 #### Dev Dependencies
 
+* [chai](https://www.npmjs.com/package/chai) — assertion library for use with testing framework
+* [mocha](https://www.npmjs.com/package/mocha) — testing framework 
 * [nodemon](https://www.npmjs.com/package/nodemon) — monitor script to automatically restart node app when file changes are detected
 
 ### Future Directions / Personal Stretch Goals
