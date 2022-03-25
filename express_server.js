@@ -8,7 +8,10 @@ const PORT = 8080;
 
 app.set('view engine', 'ejs');
 app.use(bodyParser.urlencoded({extended: true}));
-app.use(cookieSession());
+app.use(cookieSession({
+  name: 'session',
+  keys: ['cookieKey1', 'cookieKey2', 'cookieKey3']
+}));
 
 const generateRandomString = () => Math.random().toString(36).slice(2, 8);
 
@@ -110,7 +113,7 @@ app.get('/login', (req, res) => {
 });
 
 app.get('/register', (req, res) => {
-  if (isLoggedIn(req.cookies['user_id'])) {
+  if (isLoggedIn(req.session.user_id)) {
     res.redirect('/urls');
     return;
   }
@@ -128,7 +131,7 @@ app.get('/u/:shortURL', (req, res) => {
 });
 
 app.get('/urls', (req, res) => {
-  const userID = req.cookies['user_id'];
+  const userID = req.session.user_id;
   if (!isLoggedIn(userID)) {
     res.status(403).send('404 FORBIDDEN');
     return;
@@ -146,11 +149,11 @@ app.get('/urls.json', (req, res) => {
 });
 
 app.get('/urls/new', (req, res) => {
-  const userID = req.cookies['user_id'];
+  const userID = req.session.user_id;
   const templateVars = {
     user: users[userID]
   };
-  if (!isLoggedIn(req.cookies['user_id'])) {
+  if (!isLoggedIn(req.session.user_id)) {
     res.redirect('/login');
     return;
   }
@@ -158,7 +161,7 @@ app.get('/urls/new', (req, res) => {
 });
 
 app.get('/urls/:shortURL', (req, res) => {
-  const userID = req.cookies['user_id'];
+  const userID = req.session.user_id;
   const shortURL = req.params.shortURL;
   if (!(shortUrlExists(shortURL))) {
     res.status(404).send('404 NOT FOUND');
@@ -188,13 +191,13 @@ app.post('/register', (req, res) => {
   const id = addNewUser(email, hashedPassword);
   console.log('After:');
   console.log(users);
-  res.cookie('user_id', id);
+  req.session.user_id = id;
   res.redirect('/urls');
 });
 
 app.post('/urls/:shortURL', (req, res) => {
   const { shortURL } = req.params;
-  const userID = req.cookies['user_id'];
+  const userID = req.session.user_id;
   if (!isLoggedIn(userID)) {
     res.status(401).send('401 UNAUTHORIZED: MUST BE LOGGED IN');
     return;
@@ -209,7 +212,7 @@ app.post('/urls/:shortURL', (req, res) => {
 });
 
 app.post('/urls', (req, res) => {
-  const userID = req.cookies['user_id'];
+  const userID = req.session.user_id;
   if (!isLoggedIn(userID)) {
     res.status(401).send('401 UNAUTHORIZED: MUST BE LOGGED IN');
     return;
@@ -222,7 +225,7 @@ app.post('/urls', (req, res) => {
 
 app.post('/urls/:shortURL/delete', (req, res) => {
   const { shortURL } = req.params;
-  const userID = req.cookies['user_id'];
+  const userID = req.session.user_id;
   if (!isLoggedIn(userID)) {
     res.status(401).send('401 UNAUTHORIZED: MUST BE LOGGED IN');
     return;
@@ -243,7 +246,7 @@ app.post('/login', (req, res) => {
     res.status(403).send(`403 FORBIDDEN`);
     return;
   }
-  res.cookie('user_id', id);
+  req.session.user_id = id;
   res.redirect('/urls');
 });
 
