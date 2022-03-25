@@ -12,3 +12,11 @@ See project requirements [here](/REQS.md).
 
 * Server: [Node.js](https://nodejs.org/en/), [Express JS](https://expressjs.com/)
 * Templating: [EJS](https://ejs.co/)
+
+### Future Directions / Personal Stretch Goals
+
+* implement a web-friendly color palette
+* add footer with link to GitHub project page
+* write JSON objects to file and read from them on server start so that urlDatbase and users database can persist
+* write a Node.js client using `axios` to perform all necessary tests
+* 
