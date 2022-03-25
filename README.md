@@ -4,7 +4,12 @@ TinyApp is a URL shortener.
 
 This is a learning project for week 3 of Lighthouse Labs full-stack web development bootcamp.
 
-The focus is to learn about HTTP requests and how to route those requests. The current implementation does not use a database, so changes do not persist.
+The focus is to learn about:
+
+* HTTP requests and routing
+* Building a web server
+* Setting cookies to track login state, and reading those cookies when determining if user has permissions to access a resource or perform an action
+* Encrypting and securely storing passwords 
 
 See project requirements [here](/REQS.md).
 
