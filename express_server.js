@@ -51,9 +51,9 @@ const isLoggedIn = (userID) => {
   return true;
 };
 
-const passwordIsCorrect = (id, password) => {
-  const user = users[id];
-  return user.password === password;
+const passwordIsCorrect = (id, loginPassword) => {
+  const hashedPassword = users[id].password;
+  return bcrypt.compareSync(loginPassword, hashedPassword);
 };
 
 const urlsByUser = (userID) => {
@@ -85,8 +85,8 @@ const urlDatabase = {
 const users = {
   'aJ48lW': {
     id: 'aJ48lW',
-    email: 'test@test.com',
-    password: 'purple-monkey-dinosaur'
+    email: 'g@nzo.dev',
+    password: '$2a$10$JjFdkaipEp/8v6rXLhP3EunU4e4R8X.W6aJLn1K6h4JKpbkavoYuS' // pw = 'lol'
   },
   'yu0p44': {
     id: 'yu0p44',
