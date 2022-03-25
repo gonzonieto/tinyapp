@@ -3,6 +3,19 @@ const bodyParser = require('body-parser');
 const cookieSession = require('cookie-session');
 const bcrypt = require('bcryptjs');
 
+const {
+  getUserIDFromEmail,
+  addNewUser,
+  addNewURL,
+  shortUrlExists,
+  newEmailAlreadyUsed,
+  newUserHasBlankFields,
+  isLoggedIn,
+  passwordIsCorrect,
+  urlsByUser,
+  userOwnsUrl
+} = require('./helpers');
+
 const app = express();
 const PORT = 8080;
 
@@ -12,63 +25,6 @@ app.use(cookieSession({
   name: 'session',
   keys: ['cookieKey1', 'cookieKey2', 'cookieKey3']
 }));
-
-const generateRandomString = () => Math.random().toString(36).slice(2, 8);
-
-const getUserIDFromEmail = (email) => {
-  const user = Object.values(users).find((item) => item.email === email);
-  return user === undefined ? undefined : user.id;
-};
-
-const addNewUser = (email, password) => {
-  const id = generateRandomString();
-  users[id] = { id, email, password };
-  return id;
-};
-
-const addNewURL = (longURL, userID) => {
-  const shortURL = generateRandomString();
-  urlDatabase[shortURL] = { longURL, userID };
-  return shortURL;
-};
-
-const shortUrlExists = (shortURL) => {
-  return urlDatabase[shortURL] === undefined
-    ? false
-    : true;
-};
-
-const newEmailAlreadyUsed = (email) => {
-  const userEmails = Object.values(users).map((user) => user['email']);
-  return userEmails.includes(email);
-};
-
-const newUserHasBlankFields = (email, password) => [email, password].includes('');
-
-const isLoggedIn = (userID) => {
-  //get an array of valid user IDs
-  const userIDs = Object.keys(users);
-  if (userID === undefined || !userIDs.includes(userID)) {
-    return false;
-  }
-  return true;
-};
-
-const passwordIsCorrect = (id, loginPassword) => {
-  const hashedPassword = users[id].password;
-  return bcrypt.compareSync(loginPassword, hashedPassword);
-};
-
-const urlsByUser = (userID) => {
-  const urls = Object.entries(urlDatabase)
-    .filter(x => x[1].userID === userID);
-  return urls;
-};
-
-const userOwnsUrl = (userID, shortURL) => {
-  const urls = urlsByUser(userID).map(x => x[0]);
-  return urls.includes(shortURL);
-};
 
 const urlDatabase = {
   b6UTxQ: {
@@ -113,7 +69,7 @@ app.get('/login', (req, res) => {
 });
 
 app.get('/register', (req, res) => {
-  if (isLoggedIn(req.session.user_id)) {
+  if (isLoggedIn(req.session.user_id, users)) {
     res.redirect('/urls');
     return;
   }
@@ -122,7 +78,7 @@ app.get('/register', (req, res) => {
 
 app.get('/u/:shortURL', (req, res) => {
   const shortURL = req.params.shortURL;
-  if (!(shortUrlExists(shortURL))) {
+  if (!(shortUrlExists(shortURL, urlDatabase))) {
     res.status(404).send('404 NOT FOUND');
     return;
   }
@@ -132,13 +88,13 @@ app.get('/u/:shortURL', (req, res) => {
 
 app.get('/urls', (req, res) => {
   const userID = req.session.user_id;
-  if (!isLoggedIn(userID)) {
+  if (!isLoggedIn(userID, users)) {
     res.status(403).send('404 FORBIDDEN');
     return;
   }
 
   const templateVars = {
-    urls: urlsByUser(userID),
+    urls: urlsByUser(userID, urlDatabase),
     user: users[userID]
   };
   res.render('urls_index', templateVars);
@@ -153,7 +109,7 @@ app.get('/urls/new', (req, res) => {
   const templateVars = {
     user: users[userID]
   };
-  if (!isLoggedIn(req.session.user_id)) {
+  if (!isLoggedIn(req.session.user_id, users)) {
     res.redirect('/login');
     return;
   }
@@ -163,7 +119,7 @@ app.get('/urls/new', (req, res) => {
 app.get('/urls/:shortURL', (req, res) => {
   const userID = req.session.user_id;
   const shortURL = req.params.shortURL;
-  if (!(shortUrlExists(shortURL))) {
+  if (!shortUrlExists(shortURL, urlDatabase)) {
     res.status(404).send('404 NOT FOUND');
     return;
   }
@@ -180,7 +136,7 @@ app.post('/register', (req, res) => {
   const email = req.body.email;
   const password = req.body.password;
 
-  if (newUserHasBlankFields(email, password) || newEmailAlreadyUsed(email)) {
+  if (newUserHasBlankFields(email, password) || newEmailAlreadyUsed(email, users)) {
     res.status(400).send('400 BAD REQUEST');
     return;
   }
@@ -188,7 +144,7 @@ app.post('/register', (req, res) => {
   const hashedPassword = bcrypt.hashSync(password, 10);
   console.log('Before:');
   console.log(users);
-  const id = addNewUser(email, hashedPassword);
+  const id = addNewUser(email, hashedPassword, users);
   console.log('After:');
   console.log(users);
   req.session.user_id = id;
@@ -198,12 +154,12 @@ app.post('/register', (req, res) => {
 app.post('/urls/:shortURL', (req, res) => {
   const { shortURL } = req.params;
   const userID = req.session.user_id;
-  if (!isLoggedIn(userID)) {
+  if (!isLoggedIn(userID, users)) {
     res.status(401).send('401 UNAUTHORIZED: MUST BE LOGGED IN');
     return;
   }
 
-  if (!userOwnsUrl(userID, shortURL)) {
+  if (!userOwnsUrl(userID, shortURL, urlDatabase)) {
     res.status(401).send('401 UNAUTHORIZED: MUST BE OWNER OF URL');
     return;
   }
@@ -213,12 +169,12 @@ app.post('/urls/:shortURL', (req, res) => {
 
 app.post('/urls', (req, res) => {
   const userID = req.session.user_id;
-  if (!isLoggedIn(userID)) {
+  if (!isLoggedIn(userID, users)) {
     res.status(401).send('401 UNAUTHORIZED: MUST BE LOGGED IN');
     return;
   }
 
-  const shortURL = addNewURL(req.body.longURL, userID);
+  const shortURL = addNewURL(req.body.longURL, userID, urlDatabase);
   console.log(urlDatabase);
   res.redirect('/urls/' + shortURL);
 });
@@ -226,12 +182,12 @@ app.post('/urls', (req, res) => {
 app.post('/urls/:shortURL/delete', (req, res) => {
   const { shortURL } = req.params;
   const userID = req.session.user_id;
-  if (!isLoggedIn(userID)) {
+  if (!isLoggedIn(userID, users)) {
     res.status(401).send('401 UNAUTHORIZED: MUST BE LOGGED IN');
     return;
   }
 
-  if (!userOwnsUrl(userID, shortURL)) {
+  if (!userOwnsUrl(userID, shortURL, urlDatabase)) {
     res.status(401).send('401 UNAUTHORIZED: MUST BE OWNER OF URL');
     return;
   }
@@ -241,8 +197,8 @@ app.post('/urls/:shortURL/delete', (req, res) => {
 
 app.post('/login', (req, res) => {
   const { email, password } = req.body;
-  const id = getUserIDFromEmail(email);
-  if (id === undefined || !passwordIsCorrect(id, password)) {
+  const id = getUserIDFromEmail(email, users);
+  if (id === undefined || !passwordIsCorrect(id, password, users)) {
     res.status(403).send(`403 FORBIDDEN`);
     return;
   }
