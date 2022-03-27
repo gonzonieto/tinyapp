@@ -4,17 +4,19 @@
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
-    <div class="collapse navbar-collapse justify-content-between" id="navbarNavAltMarkup">
+    <div class="collapse form-inline navbar-collapse justify-content-between" id="navbarNavAltMarkup">
       <div class="navbar-nav">
         <a class="nav-item nav-link" href="/urls">My URLs</a>
-        <a class="nav-item nav-link" href="/urls/new">Create New URL</a>
-        <form class="form-inline" action="/logout" method="POST">
-          <button type="submit" class="btn btn-outline-light ml-4 btn-sm">COOKIE MONSTER</button>
-        </form>
+        <a class="nav-item nav-link" href="/urls/new">Create a New Short Link</a>
       </div>
       <!-- if user is logged in, show their email and hide login form -->
       <% if (typeof(user) !== 'undefined') { %>
-        <p class="text-light mb-0 mr-2">Logged in as <%= user.email %></p>
+        <div class="form-inline">
+          <span style="color:rgba(255,255,255,.5);height:fit-content">Logged in as <%= user.email %></span>
+          <form action="/logout" method="POST">
+            <button type="submit" id="logout-button" class="btn btn-outline-light ml-4 btn-sm">Log Out</button>
+          </form>
+        </div>
         <!-- otherwise, show the login form -->
       <% } else { %>
       <div>
