@@ -3,6 +3,7 @@ const bodyParser = require('body-parser');
 const cookieSession = require('cookie-session');
 const bcrypt = require('bcryptjs');
 
+//Including helper functions
 const {
   getUserIDFromEmail,
   addNewUser,
@@ -15,6 +16,7 @@ const {
   urlsByUser,
   userOwnsUrl
 } = require('./helpers');
+const res = require('express/lib/response');
 
 const app = express();
 const PORT = 8080;
@@ -25,6 +27,7 @@ app.use(cookieSession({
   name: 'session',
   keys: ['cookieKey1', 'cookieKey2', 'cookieKey3']
 }));
+app.use(express.static(__dirname));
 
 const urlDatabase = {
   b6UTxQ: {
@@ -61,15 +64,21 @@ const users = {
 
 // GET
 app.get('/', (req, res) => {
-  res.redirect('/urls');
+  isLoggedIn(req.session.userID, users)
+    ? res.redirect('/urls')
+    : res.redirect('/login');
 });
 
 app.get('/login', (req, res) => {
+  if (isLoggedIn(req.session.userID, users)) {
+    res.redirect('/urls');
+    return;
+  }
   res.render('login');
 });
 
 app.get('/register', (req, res) => {
-  if (isLoggedIn(req.session.user_id, users)) {
+  if (isLoggedIn(req.session.userID, users)) {
     res.redirect('/urls');
     return;
   }
@@ -79,17 +88,20 @@ app.get('/register', (req, res) => {
 app.get('/u/:shortURL', (req, res) => {
   const shortURL = req.params.shortURL;
   if (!(shortUrlExists(shortURL, urlDatabase))) {
-    res.status(404).send('404 NOT FOUND');
+    const errorInfo = { errorCode:'404 NOT FOUND', errorMsg:'Must be logged in to access this page.' };
+    res.status(404).render('error', errorInfo);
     return;
   }
+  
   const longURL = urlDatabase[shortURL].longURL;
   res.redirect(longURL);
 });
 
 app.get('/urls', (req, res) => {
-  const userID = req.session.user_id;
+  const userID = req.session.userID;
   if (!isLoggedIn(userID, users)) {
-    res.status(403).send('404 FORBIDDEN');
+    const errorInfo = { errorCode:'403 FORBIDDEN', errorMsg:'Must be logged in to access this page.' };
+    res.status(403).render('error', errorInfo);
     return;
   }
 
@@ -105,11 +117,11 @@ app.get('/urls.json', (req, res) => {
 });
 
 app.get('/urls/new', (req, res) => {
-  const userID = req.session.user_id;
+  const userID = req.session.userID;
   const templateVars = {
     user: users[userID]
   };
-  if (!isLoggedIn(req.session.user_id, users)) {
+  if (!isLoggedIn(req.session.userID, users)) {
     res.redirect('/login');
     return;
   }
@@ -117,10 +129,22 @@ app.get('/urls/new', (req, res) => {
 });
 
 app.get('/urls/:shortURL', (req, res) => {
-  const userID = req.session.user_id;
+  const userID = req.session.userID;
   const shortURL = req.params.shortURL;
   if (!shortUrlExists(shortURL, urlDatabase)) {
-    res.status(404).send('404 NOT FOUND');
+    const errorInfo = { errorCode:'404 NOT FOUND', errorMsg:`${shortURL} does not exist. Nice try, hacker!` };
+    res.status(403).render('error', errorInfo);
+    return;
+  }
+  if (!isLoggedIn(userID, users)) {
+    const errorInfo = { errorCode:'403 FORBIDDEN', errorMsg:'Must be logged in to access this page.' };
+    res.status(403).render('error', errorInfo);
+    return;
+  }
+
+  if (!userOwnsUrl(userID, shortURL, urlDatabase)) {
+    const errorInfo = { errorCode:'403 FORBIDDEN', errorMsg:'Must own this TinyURL to view the page.' };
+    res.status(403).render('error', errorInfo);
     return;
   }
   const templateVars = {
@@ -131,36 +155,38 @@ app.get('/urls/:shortURL', (req, res) => {
   res.render('urls_show', templateVars);
 });
 
+app.get('resources/:resource', (req, res) => {
+  res.render('resource');
+});
+
 // POST
 app.post('/register', (req, res) => {
   const email = req.body.email;
   const password = req.body.password;
 
   if (newUserHasBlankFields(email, password) || newEmailAlreadyUsed(email, users)) {
-    res.status(400).send('400 BAD REQUEST');
+    const errorInfo = { errorNum: 400, errorCode:'400 BAD REQUEST', errorMsg:'Invalid account creation details.' };
+    res.status(errorInfo.errorNum).render('error', errorInfo);
     return;
   }
-
   const hashedPassword = bcrypt.hashSync(password, 10);
-  console.log('Before:');
-  console.log(users);
   const id = addNewUser(email, hashedPassword, users);
-  console.log('After:');
-  console.log(users);
-  req.session.user_id = id;
+  req.session.userID = id;
   res.redirect('/urls');
 });
 
 app.post('/urls/:shortURL', (req, res) => {
   const { shortURL } = req.params;
-  const userID = req.session.user_id;
+  const userID = req.session.userID;
   if (!isLoggedIn(userID, users)) {
-    res.status(401).send('401 UNAUTHORIZED: MUST BE LOGGED IN');
+    const errorInfo = { errorNum: 401, errorCode:'401 UNAUTHORIZED', errorMsg:'Must be logged in to perform this action! Please log in and try again.' };
+    res.status(errorInfo.errorNum).render('error', errorInfo);
     return;
   }
 
   if (!userOwnsUrl(userID, shortURL, urlDatabase)) {
-    res.status(401).send('401 UNAUTHORIZED: MUST BE OWNER OF URL');
+    const errorInfo = { errorNum: 401, errorCode:'401 UNAUTHORIZED', errorMsg:'Must own this resource to edit it.' };
+    res.status(errorInfo.errorNum).render('error', errorInfo);
     return;
   }
   urlDatabase[shortURL].longURL = req.body.longURL;
@@ -168,9 +194,10 @@ app.post('/urls/:shortURL', (req, res) => {
 });
 
 app.post('/urls', (req, res) => {
-  const userID = req.session.user_id;
+  const userID = req.session.userID;
   if (!isLoggedIn(userID, users)) {
-    res.status(401).send('401 UNAUTHORIZED: MUST BE LOGGED IN');
+    const errorInfo = { errorNum: 401, errorCode:'401 UNAUTHORIZED', errorMsg:'Must be logged in to perform this action! Please log in and try again.' };
+    res.status(errorInfo.errorNum).render('error', errorInfo);
     return;
   }
 
@@ -181,14 +208,16 @@ app.post('/urls', (req, res) => {
 
 app.post('/urls/:shortURL/delete', (req, res) => {
   const { shortURL } = req.params;
-  const userID = req.session.user_id;
+  const userID = req.session.userID;
   if (!isLoggedIn(userID, users)) {
-    res.status(401).send('401 UNAUTHORIZED: MUST BE LOGGED IN');
+    const errorInfo = { errorNum: 401, errorCode:'401 UNAUTHORIZED', errorMsg:'Must be logged in to perform this action!' };
+    res.status(errorInfo.errorNum).render('error', errorInfo);
     return;
   }
 
   if (!userOwnsUrl(userID, shortURL, urlDatabase)) {
-    res.status(401).send('401 UNAUTHORIZED: MUST BE OWNER OF URL');
+    const errorInfo = { errorNum: 401, errorCode:'401 UNAUTHORIZED', errorMsg:'Must own this resource to edit it.' };
+    res.status(errorInfo.errorNum).render('error', errorInfo);
     return;
   }
   delete urlDatabase[shortURL];
@@ -199,10 +228,11 @@ app.post('/login', (req, res) => {
   const { email, password } = req.body;
   const id = getUserIDFromEmail(email, users);
   if (id === undefined || !passwordIsCorrect(id, password, users)) {
-    res.status(403).send(`403 FORBIDDEN`);
+    const errorInfo = { errorNum: 403, errorCode:'403 FORBIDDEN', errorMsg:'Login attempt failed.' };
+    res.status(errorInfo.errorNum).render('error', errorInfo);
     return;
   }
-  req.session.user_id = id;
+  req.session.userID = id;
   res.redirect('/urls');
 });
 
