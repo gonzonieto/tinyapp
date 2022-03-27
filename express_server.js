@@ -32,15 +32,18 @@ app.use(express.static(__dirname));
 const urlDatabase = {
   b6UTxQ: {
     longURL: 'https://www.implicitaudio.ca',
-    userID: 'yu0p44'
+    userID: 'yu0p44',
+    creationDate: 'January 1, 1970'
   },
   i3BoGr: {
     longURL: 'https://www.shopify.com',
-    userID: 'aJ48lW'
+    userID: 'aJ48lW',
+    creationDate: 'January 1, 1970'
   },
   y4tjj1: {
     longURL: 'https://www.guitarcabinets.ca',
-    userID: 'yu0p44'
+    userID: 'yu0p44',
+    creationDate: 'January 1, 1970'
   }
 };
 
@@ -190,6 +193,7 @@ app.post('/urls/:shortURL', (req, res) => {
     return;
   }
   urlDatabase[shortURL].longURL = req.body.longURL;
+  urlDatabase[shortURL].creationDate = new Date().toLocaleDateString("default", { year: 'numeric', month: 'long', day: 'numeric' });
   res.redirect('/urls/');
 });
 
@@ -200,9 +204,8 @@ app.post('/urls', (req, res) => {
     res.status(errorInfo.errorNum).render('error', errorInfo);
     return;
   }
-
-  const shortURL = addNewURL(req.body.longURL, userID, urlDatabase);
-  console.log(urlDatabase);
+  const date = new Date().toLocaleDateString("default", { year: 'numeric', month: 'long', day: 'numeric' });
+  const shortURL = addNewURL(req.body.longURL, userID, urlDatabase, date);
   res.redirect('/urls/' + shortURL);
 });
 
