@@ -13,9 +13,9 @@ const addNewUser = (email, password, users) => {
   return id;
 };
 
-const addNewURL = (longURL, userID, urlDatabase) => {
+const addNewURL = (longURL, userID, urlDatabase, creationDate) => {
   const shortURL = generateRandomString();
-  urlDatabase[shortURL] = { longURL, userID };
+  urlDatabase[shortURL] = { longURL, userID, creationDate };
   return shortURL;
 };
 
