@@ -14,15 +14,15 @@
 
     <%- include('partials/_header') %>
     
-    <main style="margin: 1em;">
-      <div class="card">
+    <main>
+      <div class="card mx-auto" style="min-width:28rem;max-width:60%;">
         <div class="card-header">
-          <h4 class="display-4 text-center">Create TinyURL</h4>
+          <h3 class="display-3 text-center mx-3">Create TinyURL</h3>
         </div>
-        <div class="card-body row justify-content-center">
-          <form class="form-inline" action="/urls" method="POST">
+        <div class="card-body justify-content-center">
+          <div class="row justify-content-center">
             <%- include('partials/_longURLForm') %>
-          </form>
+        </div>
         </div>
       </div>
     </main>
