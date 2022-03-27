@@ -8,24 +8,20 @@
 
 <body>
   <%- include('partials/_header') %>
-  <div class="card text-center">
+  <div class="card mx-auto text-center" style="min-width:28rem;max-width:60%;">
       <div class="card-header">
-        <div class="my-1">
-          <h4 class="card-title display-4">TinyURL <a class="ml-2" href="/u/<%= shortURL %>"><%= shortURL %></a>
-          </h4>
+        <div class="my-1 mx-2">
+          <h3 class="card-title display-3">TinyURL <a class="ml-2" href="/u/<%= shortURL %>"><%= shortURL %></a></h3>
         </div>
       </div>
       <div class="card-body">
-        <span class="lead" style=>Shortens: <%= longURL %></span>
+        <h4 class="card-title display-4" style="font-size:3.2rem">Shortens</h4>
+        <span class="lead" style="font-size:2.2rem"> <%= longURL %></span>
       </div>
-    <div class="card-footer text-muted">
-      <div class="container">
-        <h3 class="mt-1 mb-0">Edit</h3>
-        <div class="row justify-content-center">
-          <form class="form-inline" action="/urls/<%= shortURL %>" method="POST">
-            <%- include('partials/_longURLForm') %>
-          </form>
-        </div>
+    <div class="card-footer py-0 text-muted">
+      <h3 class="my-3">Update the URL linked to <%= shortURL %></h3>
+      <div class="row justify-content-center">
+          <%- include('partials/_longURLForm') %>
       </div>
     </div>
   </div>
