@@ -26,7 +26,7 @@
       - [x] a delete button which makes a POST request to `/urls/:id/delete`
       - [x] (Stretch) the date the short URL was created
       - [x] (Stretch) the number of times the short URL was visited
-      - [ ] (Stretch) the number of unique visits for the short URL
+      - [x] (Stretch) the number of unique visits for the short URL
     - [x] (Minor) a link to "Create a New Short Link" which makes a GET request to `/urls/new`
   - If user is not logged in:
     - [x] returns HTML with a relevant error message
@@ -49,7 +49,7 @@
       - [x] an update button which makes a POST request to `/urls/:id`
     - [x] (Stretch) the date the short URL was created
     - [x] (Stretch) the number of times the short URL was visited
-    - [ ] (Stretch) the number of unique visits for the short URL
+    - [x] (Stretch) the number of unique visits for the short URL
   - if a URL for the given ID does not exist
     - [x] (Minor) returns HTML with a relevant error message
   - if user is not logged in:
