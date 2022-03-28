@@ -15,12 +15,16 @@ const addNewUser = (email, password, users) => {
 
 const addNewURL = (longURL, userID, urlDatabase, creationDate) => {
   const shortURL = generateRandomString();
-  urlDatabase[shortURL] = { longURL, userID, creationDate };
+  urlDatabase[shortURL] = { longURL, userID, creationDate, visits: 0 };
   return shortURL;
 };
 
 const shortUrlExists = (shortURL, urlDatabase) => {
   return urlDatabase[shortURL] === undefined ? false : true;
+};
+
+const incrementViews = (shortURL, urlDatabase) => {
+  urlDatabase[shortURL].visits++;
 };
 
 const newEmailAlreadyUsed = (email, users) => {
@@ -36,6 +40,12 @@ const isLoggedIn = (userID, users) => {
     return false;
   }
   return true;
+};
+
+const logUser = (userID, shortURL, urlDatabase) => {
+  if ( !urlDatabase[shortURL].uniqueUsers.includes(userID)) {
+    urlDatabase[shortURL].uniqueUsers.push(userID);
+  }
 };
 
 const passwordIsCorrect = (id, loginPassword, users) => {
@@ -59,10 +69,12 @@ module.exports = {
   addNewUser,
   addNewURL,
   shortUrlExists,
+  incrementViews,
   newEmailAlreadyUsed,
   newUserHasBlankFields,
   isLoggedIn,
   passwordIsCorrect,
   urlsByUser,
-  userOwnsUrl
+  userOwnsUrl,
+  logUser
 };

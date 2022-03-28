@@ -9,14 +9,15 @@ const {
   addNewUser,
   addNewURL,
   shortUrlExists,
+  incrementViews,
   newEmailAlreadyUsed,
   newUserHasBlankFields,
   isLoggedIn,
   passwordIsCorrect,
   urlsByUser,
-  userOwnsUrl
+  userOwnsUrl,
+  logUser
 } = require('./helpers');
-const res = require('express/lib/response');
 
 const app = express();
 const PORT = 8080;
@@ -33,17 +34,23 @@ const urlDatabase = {
   b6UTxQ: {
     longURL: 'https://www.implicitaudio.ca',
     userID: 'yu0p44',
-    creationDate: 'January 1, 1970'
+    creationDate: 'January 1, 1970',
+    visits: 85,
+    uniqueUsers: []
   },
   i3BoGr: {
     longURL: 'https://www.shopify.com',
     userID: 'aJ48lW',
-    creationDate: 'January 1, 1970'
+    creationDate: 'January 1, 1970',
+    visits: 137869,
+    uniqueUsers: []
   },
   y4tjj1: {
     longURL: 'https://www.guitarcabinets.ca',
     userID: 'yu0p44',
-    creationDate: 'January 1, 1970'
+    creationDate: 'January 1, 1970',
+    visits: 2,
+    uniqueUsers: []
   }
 };
 
@@ -95,8 +102,16 @@ app.get('/u/:shortURL', (req, res) => {
     res.status(404).render('error', errorInfo);
     return;
   }
+
+  incrementViews(shortURL, urlDatabase);
+
+  const userID = req.session.userID;
+  if (isLoggedIn(req.session.userID, users)) {
+    logUser(userID, shortURL, urlDatabase);
+  }
   
   const longURL = urlDatabase[shortURL].longURL;
+  console.log(urlDatabase);
   res.redirect(longURL);
 });
 
@@ -152,14 +167,12 @@ app.get('/urls/:shortURL', (req, res) => {
   }
   const templateVars = {
     shortURL,
+    visits: urlDatabase[shortURL].visits,
+    creationDate: urlDatabase[shortURL].creationDate,
     longURL: urlDatabase[shortURL].longURL,
     user: users[userID]
   };
   res.render('urls_show', templateVars);
-});
-
-app.get('resources/:resource', (req, res) => {
-  res.render('resource');
 });
 
 // POST
