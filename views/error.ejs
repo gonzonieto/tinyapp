@@ -1,23 +1,15 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-
-  <!-- Bootstrap CSS -->
-  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
-  <title>TinyApp</title>
-</head>
+<%- include('partials/_head') %>
 <body>
   <main>
     <%- include('partials/_header') %>
-    <div class="justify-content-center w-50 mx-auto">
-      <div class="text-center mb-2">
-        <h5 class="display-4"><%= errorCode %> </h5>
-        <p class="lead"><%= errorMsg %></p>
+
+    <div class="card mx-auto" style="min-width:28rem;max-width:60%;">
+      <div class="d-flex card-header justify-content-center">
+        <img src="/src/error-icon.png" alt="Error icon" class="card-img-top" style="width:25%">
       </div>
-      <div class="text-center mb-5">
-        <img src="/resources/error-icon.png" alt="Error icon" width="160">
+      <div class="card-body">
+        <h3 class="card-title display-3 text-center mx-3"><%= errorCode %></h3>
+        <p class="lead text-center"><%= errorMsg %></p>
       </div>
     </div>
   </main>

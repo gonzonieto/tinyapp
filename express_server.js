@@ -167,6 +167,7 @@ app.get('/urls/:shortURL', (req, res) => {
   }
   const templateVars = {
     shortURL,
+    uniqueUsers: urlDatabase[shortURL].uniqueUsers,
     visits: urlDatabase[shortURL].visits,
     creationDate: urlDatabase[shortURL].creationDate,
     longURL: urlDatabase[shortURL].longURL,
