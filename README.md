@@ -7,9 +7,11 @@ This is a learning project for week 3 of Lighthouse Labs full-stack web developm
 * HTTP requests and routing
 * Building a web server
 * Setting cookies to track login state, and reading those cookies when determining if user has permissions to access a resource or perform an action
-* Encrypting and securely storing passwords 
+* Encrypting and securely storing passwords
 
 See project requirements [here](/REQS.md).
+
+
 
 ## Tech Stack & Dependencies
 
@@ -30,10 +32,18 @@ See project requirements [here](/REQS.md).
 * [mocha](https://www.npmjs.com/package/mocha) — testing framework 
 * [nodemon](https://www.npmjs.com/package/nodemon) — monitor script to automatically restart node app when file changes are detected
 
+### Screenshots
+
+![`/login`](https://github.com/gonzonieto/tinyapp/blob/main/docs/login.png)
+![`/index`](https://github.com/gonzonieto/tinyapp/blob/main/docs/index.png)
+![`/create`](https://github.com/gonzonieto/tinyapp/blob/main/docs/create.png)
+![`/show`](https://github.com/gonzonieto/tinyapp/blob/main/docs/show.png)
+![`/error`](https://github.com/gonzonieto/tinyapp/blob/main/docs/error.png)
+
+
 ### Future Directions / Personal Stretch Goals
 
 * implement a web-friendly color palette
 * add footer with link to GitHub project page
 * write JSON objects to file and read from them on server start so that urlDatbase and users database can persist
 * write a Node.js client using `axios` to perform all necessary tests
-* 
