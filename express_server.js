@@ -2,6 +2,7 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const cookieSession = require('cookie-session');
 const bcrypt = require('bcryptjs');
+const fs = require('fs');
 
 //Including helper functions
 const {
@@ -22,6 +23,7 @@ const {
 const app = express();
 const PORT = 8080;
 
+
 app.set('view engine', 'ejs');
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(cookieSession({
@@ -30,47 +32,25 @@ app.use(cookieSession({
 }));
 app.use(express.static(__dirname));
 
-const urlDatabase = {
-  b6UTxQ: {
-    longURL: 'https://www.implicitaudio.ca',
-    userID: 'yu0p44',
-    creationDate: 'January 1, 1970',
-    visits: 85,
-    uniqueUsers: []
-  },
-  i3BoGr: {
-    longURL: 'https://www.shopify.com',
-    userID: 'aJ48lW',
-    creationDate: 'January 1, 1970',
-    visits: 137869,
-    uniqueUsers: []
-  },
-  y4tjj1: {
-    longURL: 'https://www.guitarcabinets.ca',
-    userID: 'yu0p44',
-    creationDate: 'January 1, 1970',
-    visits: 2,
-    uniqueUsers: []
-  }
-};
+process.on(('SIGTERM'), () => {
+  fs.writeFileSync(__dirname + '/src/userDatabase.txt', JSON.stringify(users));
+  console.log('SIGTERM signal received: Saving files and closing HTTP server');
+  app.close(() => {
+    console.log('HTTP server closed');
+  });
+});
 
-const users = {
-  'aJ48lW': {
-    id: 'aJ48lW',
-    email: 'g@nzo.dev',
-    password: '$2a$10$JjFdkaipEp/8v6rXLhP3EunU4e4R8X.W6aJLn1K6h4JKpbkavoYuS' // pw = 'lol'
-  },
-  'yu0p44': {
-    id: 'yu0p44',
-    email: 'g@nzo.com',
-    password: '$2a$10$QmOTsuK8oZkAL8cidgjEgOtu0KOv1OMkOeITTugrCTflBb7hAA.bG' // pw = 'gg'
-  },
-  'eez212': {
-    id: 'eez212',
-    email: 'hi@implicitaudio.ca',
-    password: '$2a$10$yJSAt5TGErmWIA/pU6N/N.3xLJxeR7DvqWvLR7jvqFpZrPd7Jto8O' // pw = 'a'
-  }
-};
+process.on(('SIGINT'), () => {
+  fs.writeFileSync(__dirname + '/src/urlDatabase.txt', JSON.stringify(urlDatabase));
+  console.log('SIGINT signal received: Saving files and closing HTTP server');
+  app.close(() => {
+    console.log('HTTP server closed');
+  });
+});
+
+const urlDatabase = JSON.parse(fs.readFileSync(__dirname + '/src/urlDatabase.txt', 'utf8'));
+
+const users = JSON.parse(fs.readFileSync(__dirname + '/src/userDatabase.txt', 'utf8'));
 
 // GET
 app.get('/', (req, res) => {

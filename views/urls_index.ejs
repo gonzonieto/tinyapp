@@ -42,8 +42,8 @@
               <% const res = regex.exec(longURL) %>
               <tr>
                 <td class="align-middle">
-                  <a href="http://localhost:8080/u/i3BoGr">
-                    <span class="ml-3" style="text-decoration:none; color:darkgray">bit.ly/ <span style="color:rgb(33,37,41)"><strong> <%= shortURL %></strong></span></span>
+                  <a href="http://localhost:8080/u/<%= shortURL %>">
+                    <span class="ml-3" style="text-decoration:none; color:darkgray">localhost:8080/ <span style="color:rgb(33,37,41)"><strong> <%= shortURL %></strong></span></span>
                   </a>
                 </td>
                 <td class="align-middle text-center">

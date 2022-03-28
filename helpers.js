@@ -15,7 +15,7 @@ const addNewUser = (email, password, users) => {
 
 const addNewURL = (longURL, userID, urlDatabase, creationDate) => {
   const shortURL = generateRandomString();
-  urlDatabase[shortURL] = { longURL, userID, creationDate, visits: 0 };
+  urlDatabase[shortURL] = { longURL, userID, creationDate, visits: 0, uniqueUsers: [] };
   return shortURL;
 };
 
@@ -43,7 +43,7 @@ const isLoggedIn = (userID, users) => {
 };
 
 const logUser = (userID, shortURL, urlDatabase) => {
-  if ( !urlDatabase[shortURL].uniqueUsers.includes(userID)) {
+  if (!urlDatabase[shortURL].uniqueUsers.includes(userID)) {
     urlDatabase[shortURL].uniqueUsers.push(userID);
   }
 };
