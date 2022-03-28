@@ -24,8 +24,8 @@
       - [x] the short URL's matching long URL
       - [x] an edit button which makes a GET request to `/urls/:id`
       - [x] a delete button which makes a POST request to `/urls/:id/delete`
-      - [ ] (Stretch) the date the short URL was created
-      - [ ] (Stretch) the number of times the short URL was visited
+      - [x] (Stretch) the date the short URL was created
+      - [x] (Stretch) the number of times the short URL was visited
       - [ ] (Stretch) the number of unique visits for the short URL
     - [x] (Minor) a link to "Create a New Short Link" which makes a GET request to `/urls/new`
   - If user is not logged in:
@@ -47,8 +47,8 @@
     - [x] a form which contains:
       - [x] the corresponding URL
       - [x] an update button which makes a POST request to `/urls/:id`
-    - [ ] (Stretch) the date the short URL was created
-    - [ ] (Stretch) the number of times the short URL was visited
+    - [x] (Stretch) the date the short URL was created
+    - [x] (Stretch) the number of times the short URL was visited
     - [ ] (Stretch) the number of unique visits for the short URL
   - if a URL for the given ID does not exist
     - [x] (Minor) returns HTML with a relevant error message
