@@ -43,7 +43,7 @@ const isLoggedIn = (userID, users) => {
 };
 
 const logUser = (userID, shortURL, urlDatabase) => {
-  if ( !urlDatabase[shortURL].uniqueUsers.includes(userID)) {
+  if (!urlDatabase[shortURL].uniqueUsers.includes(userID)) {
     urlDatabase[shortURL].uniqueUsers.push(userID);
   }
 };
