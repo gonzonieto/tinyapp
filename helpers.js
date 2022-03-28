@@ -15,7 +15,7 @@ const addNewUser = (email, password, users) => {
 
 const addNewURL = (longURL, userID, urlDatabase, creationDate) => {
   const shortURL = generateRandomString();
-  urlDatabase[shortURL] = { longURL, userID, creationDate, visits: 0 };
+  urlDatabase[shortURL] = { longURL, userID, creationDate, visits: 0, uniqueUsers: [] };
   return shortURL;
 };
 
